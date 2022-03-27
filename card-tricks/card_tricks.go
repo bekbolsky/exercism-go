@@ -1,16 +1,27 @@
 package cards
 
-// GetItem retrieves an item from a slice at given position. The second return value indicates whether
-// the given index exists in the slice or not.
-func GetItem(slice []int, index int) (int, bool) {
-	if index < 0 || index >= len(slice) {
-		return 0, false
-	}
-	return slice[index], true
+// FavoriteCards returns a slice with cards in that order.
+// favorite three cards of the deck are: 2, 6 and 9.
+func FavoriteCards() []int {
+	var favoriteCards []int
+	favoriteCards = append(favoriteCards, 2, 6, 9)
+	return favoriteCards
 }
 
-// SetItem writes an item to a slice at given position overwriting an existing value.
-// If the index is out of range the value needs to be appended.
+// GetItem return the card at position 'index' from the given stack.
+// If the index is out of bounds (ie. if it is negative or after the end of the stack),
+// we want to return '-1'
+func GetItem(slice []int, index int) int {
+	if index < 0 || index >= len(slice) {
+		return -1
+	}
+	return slice[index]
+}
+
+// SetItem exchanges the card at position index with the new card provided and return the adjusted stack.
+// This will modify the input slice which is the expected behavior.
+// If the index is out of bounds (ie. if it is negative or after the end of the stack),
+// we want to append the new card to the end of the stack
 func SetItem(slice []int, index, value int) []int {
 	if index < 0 || index >= len(slice) {
 		slice = append(slice, value)
@@ -20,21 +31,18 @@ func SetItem(slice []int, index, value int) []int {
 	return slice
 }
 
-// PrefilledSlice creates a slice of given length and prefills it with the given value.
-func PrefilledSlice(value, length int) []int {
-	slice := []int{}
-	if length <= 0 {
-		return slice
-	}
-	for i := 0; i < length; i++ {
-		slice = append(slice, value)
-	}
-	return slice
+// PrependItems add the card(s) specified in the value parameter at the top of the stack.
+// If no argument is given for the value parameter, then the result equals the original slice.
+func PrependItems(slice []int, value ...int) []int {
+	return append(value, slice...)
 }
 
-// RemoveItem removes an item from a slice by modifying the existing slice.
+// RemoveItem removes the card at position index from the stack and return the stack.
+// Note that this may modify the input slice which is ok.
+// If the index is out of bounds (ie. if it is negative or after the end of the stack),
+// leaves the stack unchanged.
 func RemoveItem(slice []int, index int) []int {
-	if index < 0 || index > len(slice)-1 {
+	if index < 0 || index >= len(slice) {
 		return slice
 	}
 	return append(slice[:index], slice[index+1:]...)
