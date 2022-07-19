@@ -1,0 +1,19 @@
+func ConcurrentFrequency(l []string) FreqMap {
+	var wg sync.WaitGroup
+	m := make(FreqMap)
+	res := make([]FreqMap, len(l))
+	for i, s := range l {
+		wg.Add(1)
+		go func(i int, s string) {
+			res[i] = Frequency(s)
+			wg.Done()
+		}(i, s)
+	}
+	wg.Wait()
+	for _, r := range res {
+		for k, v := range r {
+			m[k] += v
+		}
+	}
+	return m
+}
